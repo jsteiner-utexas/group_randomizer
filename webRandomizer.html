@@ -7,8 +7,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   /* ─── ADJUSTABLE PARAMETERS ─────────────────────────────────── */
-  /* To change group size limits, edit MIN_GROUP_SIZE and MAX_GROUP_SIZE
-     in the <script> section below. Current defaults: min=6, max=9.      */
+  /* To change limits, edit MIN_GROUP_SIZE and MAX_NUM_GROUPS
+     in the <script> section below. Current defaults: min size=6, max groups=9. */
   /* ─────────────────────────────────────────────────────────────── */
 
   :root {
@@ -398,6 +398,139 @@
 
   .btn-copy:hover { background: rgba(232,255,71,0.08); border-color: var(--accent); }
 
+  /* ══════════════════════════════════════════
+     DISPLAY SCREEN (projector/TV view)
+  ══════════════════════════════════════════ */
+  #display-screen {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: #080808;
+    z-index: 100;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  #display-screen.active { display: flex; }
+
+  .ds-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 36px 16px;
+    border-bottom: 1px solid #1e1e1e;
+    flex-shrink: 0;
+  }
+
+  .ds-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 3px;
+    color: var(--accent);
+  }
+
+  .ds-meta {
+    font-size: 13px;
+    color: #555;
+    letter-spacing: 0.5px;
+  }
+
+  .ds-close {
+    background: #1a1a1a;
+    border: 1px solid #2e2e2e;
+    border-radius: 8px;
+    color: #777;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    padding: 8px 18px;
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s;
+    letter-spacing: 0.5px;
+  }
+
+  .ds-close:hover { color: var(--text); border-color: #555; }
+
+  .ds-grid {
+    flex: 1;
+    display: grid;
+    padding: 20px 28px 24px;
+    gap: 14px;
+    overflow: hidden;
+    /* columns/rows set dynamically by JS */
+  }
+
+  .ds-card {
+    background: #111;
+    border: 1px solid #222;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-height: 0;
+  }
+
+  .ds-card-header {
+    padding: 8px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+    border-bottom: 1px solid #1c1c1c;
+  }
+
+  .ds-card-title {
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 1.5px;
+    /* font-size set dynamically */
+  }
+
+  .ds-card-count {
+    font-size: 11px;
+    color: #444;
+    letter-spacing: 0.5px;
+  }
+
+  .ds-members {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2px;
+    padding: 8px 14px;
+    overflow: hidden;
+  }
+
+  .ds-member {
+    color: #ccc;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* font-size set dynamically */
+  }
+
+  /* per-group accent colors on display screen */
+  .ds-card:nth-child(10n+1)  .ds-card-header { border-top: 3px solid #e8ff47; }
+  .ds-card:nth-child(10n+2)  .ds-card-header { border-top: 3px solid #ff6b35; }
+  .ds-card:nth-child(10n+3)  .ds-card-header { border-top: 3px solid #35d9ff; }
+  .ds-card:nth-child(10n+4)  .ds-card-header { border-top: 3px solid #c084fc; }
+  .ds-card:nth-child(10n+5)  .ds-card-header { border-top: 3px solid #fb7185; }
+  .ds-card:nth-child(10n+6)  .ds-card-header { border-top: 3px solid #34d399; }
+  .ds-card:nth-child(10n+7)  .ds-card-header { border-top: 3px solid #fbbf24; }
+  .ds-card:nth-child(10n+8)  .ds-card-header { border-top: 3px solid #818cf8; }
+  .ds-card:nth-child(10n+9)  .ds-card-header { border-top: 3px solid #f472b6; }
+  .ds-card:nth-child(10n+0)  .ds-card-header { border-top: 3px solid #67e8f9; }
+
+  .ds-card:nth-child(10n+1)  .ds-card-title { color: #e8ff47; }
+  .ds-card:nth-child(10n+2)  .ds-card-title { color: #ff6b35; }
+  .ds-card:nth-child(10n+3)  .ds-card-title { color: #35d9ff; }
+  .ds-card:nth-child(10n+4)  .ds-card-title { color: #c084fc; }
+  .ds-card:nth-child(10n+5)  .ds-card-title { color: #fb7185; }
+  .ds-card:nth-child(10n+6)  .ds-card-title { color: #34d399; }
+  .ds-card:nth-child(10n+7)  .ds-card-title { color: #fbbf24; }
+  .ds-card:nth-child(10n+8)  .ds-card-title { color: #818cf8; }
+  .ds-card:nth-child(10n+9)  .ds-card-title { color: #f472b6; }
+  .ds-card:nth-child(10n+0)  .ds-card-title { color: #67e8f9; }
+
   /* ── SIGNUP MODE ── */
   .signup-section {
     margin-top: 24px;
@@ -534,12 +667,12 @@
       <div class="section-label">Group Size Parameters</div>
       <div class="params-grid">
         <div class="param-box">
-          <label>Min Size</label>
-          <input type="number" id="min-size" value="6" min="1" max="50">
+          <label>Min Group Size</label>
+          <input type="number" id="min-size" value="6" min="1" max="500">
         </div>
         <div class="param-box">
-          <label>Max Size</label>
-          <input type="number" id="max-size" value="9" min="1" max="50">
+          <label>Max # of Groups</label>
+          <input type="number" id="max-groups" value="9" min="1" max="500">
         </div>
       </div>
     </div>
@@ -603,22 +736,40 @@ Carol White
 
 </div>
 
+<!-- ══════════════════════════════════════════
+     DISPLAY SCREEN (projector/TV view)
+════════════════════════════════════════════ -->
+<div id="display-screen">
+  <div class="ds-header">
+    <div class="ds-title">GROUP RANDOMIZER</div>
+    <div class="ds-meta" id="ds-meta"></div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <button class="ds-close" onclick="openDisplayTab()" style="color:#888;font-size:12px">↗ Pop Out</button>
+      <button class="ds-close" onclick="closeDisplay()">← Back to Editor</button>
+    </div>
+  </div>
+  <div class="ds-grid" id="ds-grid"></div>
+</div>
+
 <script>
   /* ═══════════════════════════════════════════════════════════════
      ADJUSTABLE PARAMETERS
-     Change MIN_GROUP_SIZE and MAX_GROUP_SIZE to set default limits.
+     MIN_GROUP_SIZE : fewest people allowed in any single group
+     MAX_NUM_GROUPS : most groups that can be created
      Users can also adjust them via the inputs in the UI.
   ════════════════════════════════════════════════════════════════ */
-  const MIN_GROUP_SIZE = 6;
-  const MAX_GROUP_SIZE = 9;
+  const MIN_GROUP_SIZE  = 6;
+  const MAX_NUM_GROUPS  = 10;
+  const MAX_GROUP_SIZE  = 8; // hardcoded — no group will ever exceed this many people
 
   // Initialize default values from constants
-  document.getElementById('min-size').value = MIN_GROUP_SIZE;
-  document.getElementById('max-size').value = MAX_GROUP_SIZE;
+  document.getElementById('min-size').value   = MIN_GROUP_SIZE;
+  document.getElementById('max-groups').value = MAX_NUM_GROUPS;
 
   // ── STATE ──
   let currentMode = 'bulk';
   let signupNames = [];
+  let lastGroups  = [];   // stored for display screen
 
   // ── MODE SWITCH ──
   function switchMode(mode) {
@@ -713,29 +864,37 @@ Carol White
   }
 
   // ── CALCULATE OPTIMAL GROUPS ──
-  function calcGroups(names, minSize, maxSize) {
+  // Rules:
+  //   - No group may have fewer than minSize people
+  //   - No group may have more than MAX_GROUP_SIZE people (hardcoded)
+  //   - Total number of groups may not exceed maxGroups
+  //   - Groups should be as evenly sized as possible
+  function calcGroups(names, minSize, maxGroups) {
     const n = names.length;
-    if (n < minSize) return null; // not enough names
+    if (n < minSize) return null;
 
-    // Try each possible number of groups — pick the most even split
+    // Must have enough groups so no group exceeds MAX_GROUP_SIZE
+    const minG = Math.ceil(n / MAX_GROUP_SIZE);
+    // Can't have more groups than floor(n / minSize) or maxGroups
+    const maxG = Math.min(maxGroups, Math.floor(n / minSize));
+
+    if (minG > maxG) return null; // impossible to satisfy both constraints
+
     let best = null;
-    let bestScore = Infinity;
+    let bestVariance = Infinity;
 
-    for (let g = 1; g <= n; g++) {
+    for (let g = minG; g <= maxG; g++) {
       const base = Math.floor(n / g);
       const rem  = n % g;
-      if (base < minSize) break;          // groups are too small
-      if (base > maxSize && rem === 0) continue; // groups are too large
-      if (base + 1 > maxSize && rem > 0) continue; // overflow groups too large
-
-      // Score = variance in group sizes (lower = more even)
+      // rem groups get (base+1), rest get base — all within [minSize, MAX_GROUP_SIZE]
       const sizes = Array(g).fill(base);
       for (let i = 0; i < rem; i++) sizes[i]++;
-      const avg = sizes.reduce((a, b) => a + b, 0) / sizes.length;
-      const variance = sizes.reduce((a, b) => a + (b - avg) ** 2, 0) / sizes.length;
 
-      if (variance < bestScore) {
-        bestScore = variance;
+      const avg = n / g;
+      const variance = sizes.reduce((a, b) => a + (b - avg) ** 2, 0) / g;
+
+      if (variance < bestVariance) {
+        bestVariance = variance;
         best = { numGroups: g, sizes };
       }
     }
@@ -747,11 +906,11 @@ Carol White
   function randomize() {
     clearError();
 
-    const minSize = parseInt(document.getElementById('min-size').value) || MIN_GROUP_SIZE;
-    const maxSize = parseInt(document.getElementById('max-size').value) || MAX_GROUP_SIZE;
+    const minSize  = parseInt(document.getElementById('min-size').value)  || MIN_GROUP_SIZE;
+    const maxGroups = parseInt(document.getElementById('max-groups').value) || MAX_NUM_GROUPS;
 
-    if (minSize < 1 || maxSize < 1) { showError('Group size values must be at least 1.'); return; }
-    if (minSize > maxSize) { showError('Min size cannot be greater than max size.'); return; }
+    if (minSize < 1)   { showError('Min group size must be at least 1.');    return; }
+    if (maxGroups < 1) { showError('Max number of groups must be at least 1.'); return; }
 
     const names = currentMode === 'bulk' ? parseNames() : [...signupNames];
 
@@ -765,10 +924,10 @@ Carol White
       return;
     }
 
-    const plan = calcGroups(names, minSize, maxSize);
+    const plan = calcGroups(names, minSize, maxGroups);
 
     if (!plan) {
-      showError(`Cannot form groups of ${minSize}–${maxSize} with ${names.length} names. Try adjusting the min/max size parameters.`);
+      showError(`Cannot split ${names.length} people into at most ${maxGroups} group(s) with ${minSize}–${MAX_GROUP_SIZE} people per group. Try adjusting the parameters.`);
       return;
     }
 
@@ -780,11 +939,12 @@ Carol White
       cursor += s;
     }
 
-    renderResults(groups, names.length, minSize, maxSize);
+    renderResults(groups, names.length, minSize, maxGroups);
   }
 
   // ── RENDER RESULTS ──
-  function renderResults(groups, total, minSize, maxSize) {
+  function renderResults(groups, total, minSize, maxGroups) {
+    lastGroups = groups; // save for display screen
     document.getElementById('empty-state').style.display = 'none';
     const results = document.getElementById('results');
     results.style.display = 'block';
@@ -807,12 +967,14 @@ Carol White
     results.innerHTML = `
       <div class="results-header">
         <div class="results-title">Results</div>
-        <div style="display:flex;gap:10px;align-items:center">
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
           <div class="results-meta">
             <span>${total}</span> people → <span>${groups.length}</span> groups
           </div>
           <button class="btn-copy" onclick="copyResults()">Copy</button>
           <button class="btn-copy" onclick="randomize()" style="border-color:rgba(255,107,53,0.4);color:var(--accent2)">Re-shuffle</button>
+          <button class="btn-copy" onclick="openDisplay()" style="border-color:rgba(232,255,71,0.5);background:rgba(232,255,71,0.08);font-size:12px">📺 Display Screen</button>
+          <button class="btn-copy" onclick="openDisplayTab()" style="border-color:rgba(232,255,71,0.3);font-size:12px">↗ New Tab</button>
         </div>
       </div>
       <div class="groups-grid">${groupCards}</div>`;
@@ -839,11 +1001,124 @@ Carol White
   function clearAll() {
     document.getElementById('names-input').value = '';
     signupNames = [];
+    lastGroups  = [];
     renderPills();
     updateCount();
     clearError();
     document.getElementById('empty-state').style.display = 'flex';
     document.getElementById('results').style.display = 'none';
+  }
+
+  // ══════════════════════════════════════════
+  //  DISPLAY SCREEN
+  // ══════════════════════════════════════════
+  function openDisplay() {
+    if (!lastGroups.length) return;
+    renderDisplayScreen(lastGroups);
+    document.getElementById('display-screen').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function openDisplayTab() {
+    if (!lastGroups.length) return;
+    const groups = lastGroups;
+    const n = groups.length;
+    const total = groups.reduce((s, g) => s + g.length, 0);
+
+    const layouts = {
+      1:[1,1],2:[2,1],3:[3,1],4:[2,2],5:[3,2],
+      6:[3,2],7:[4,2],8:[4,2],9:[3,3],10:[5,2]
+    };
+    const [cols, rows] = layouts[n] || [Math.ceil(Math.sqrt(n)), Math.ceil(n / Math.ceil(Math.sqrt(n)))];
+
+    const colors = ['#e8ff47','#ff6b35','#35d9ff','#c084fc','#fb7185','#34d399','#fbbf24','#818cf8','#f472b6','#67e8f9'];
+
+    const cards = groups.map((members, i) => {
+      const color = colors[i % colors.length];
+      return `<div style="background:#111;border:1px solid #222;border-radius:10px;overflow:hidden;display:flex;flex-direction:column;min-height:0">
+        <div style="padding:8px 14px;border-bottom:1px solid #1c1c1c;border-top:3px solid ${color};display:flex;align-items:center;justify-content:space-between;flex-shrink:0">
+          <span style="font-family:'Bebas Neue',sans-serif;font-size:clamp(14px,1.8vw,26px);letter-spacing:1.5px;color:${color}">GROUP ${i + 1}</span>
+          <span style="font-size:11px;color:#444">${members.length} members</span>
+        </div>
+        <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:8px 14px;overflow:hidden">
+          ${members.map(m => `<div style="font-size:clamp(11px,1.3vw,18px);color:#ccc;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${m.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>`).join('')}
+        </div>
+      </div>`;
+    }).join('');
+
+    const html = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+<title>Groups — Display</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#080808;color:#f0f0f0;font-family:'DM Sans',sans-serif;height:100vh;display:flex;flex-direction:column;overflow:hidden}
+  .hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 28px;border-bottom:1px solid #1e1e1e;flex-shrink:0}
+  .hdr-title{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:3px;color:#e8ff47}
+  .hdr-meta{font-size:13px;color:#555}
+  .grid{flex:1;display:grid;grid-template-columns:repeat(${cols},1fr);grid-template-rows:repeat(${rows},1fr);gap:12px;padding:16px 24px 20px;overflow:hidden}
+</style></head><body>
+<div class="hdr">
+  <div class="hdr-title">GROUP RANDOMIZER</div>
+  <div class="hdr-meta">${total} people · ${n} group${n!==1?'s':''}</div>
+</div>
+<div class="grid">${cards}</div>
+</body></html>`;
+
+    const tab = window.open('', '_blank');
+    tab.document.write(html);
+    tab.document.close();
+  }
+
+  function closeDisplay() {
+    document.getElementById('display-screen').classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  // Close display screen with Escape key
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeDisplay();
+  });
+
+  function renderDisplayScreen(groups) {
+    const n = groups.length;
+
+    // ── Pick grid layout: minimize wasted space for 1–10 groups ──
+    const layouts = {
+      1:  [1, 1], 2:  [2, 1], 3:  [3, 1], 4:  [2, 2],
+      5:  [3, 2], 6:  [3, 2], 7:  [4, 2], 8:  [4, 2],
+      9:  [3, 3], 10: [5, 2]
+    };
+    const [cols, rows] = layouts[n] || [Math.ceil(Math.sqrt(n)), Math.ceil(n / Math.ceil(Math.sqrt(n)))];
+
+    const grid = document.getElementById('ds-grid');
+    grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+    grid.style.gridTemplateRows    = `repeat(${rows}, 1fr)`;
+
+    // ── Scale fonts based on how much space each card gets ──
+    // Estimate card height as fraction of viewport minus header (~70px)
+    const estCardH = (window.innerHeight - 80) / rows;
+    const estCardW = window.innerWidth / cols;
+    const maxMembers = Math.max(...groups.map(g => g.length));
+
+    const titleSize  = Math.max(14, Math.min(28, estCardW / cols / 2));
+    const memberSize = Math.max(11, Math.min(20, (estCardH - 60) / (maxMembers + 1) * 0.65));
+
+    const total = groups.reduce((s, g) => s + g.length, 0);
+    document.getElementById('ds-meta').textContent =
+      `${total} people · ${n} group${n !== 1 ? 's' : ''}`;
+
+    grid.innerHTML = groups.map((members, i) => `
+      <div class="ds-card">
+        <div class="ds-card-header">
+          <span class="ds-card-title" style="font-size:${titleSize}px">GROUP ${i + 1}</span>
+          <span class="ds-card-count">${members.length} members</span>
+        </div>
+        <div class="ds-members">
+          ${members.map(m => `
+            <div class="ds-member" style="font-size:${memberSize}px">${escapeHtml(m)}</div>
+          `).join('')}
+        </div>
+      </div>`).join('');
   }
 </script>
 </body>
